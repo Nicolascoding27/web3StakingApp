@@ -7,20 +7,19 @@ import "./ExampleExternalContract.sol";
 contract Staker {
 
   ExampleExternalContract public exampleExternalContract;
-  address public owner;
   address public contrato;
   uint public constant threshold =1 ether; 
-  enum State {Staked,Success,Withdraw};
+  // enum State {Staked,Success,Withdraw};
   //Deadline to execute
   uint256 public deadline =block.timestamp + 30 seconds; 
-  State public contractState;
+  uint256 public timeLeft= block.timestamp;
+  // State public contractState;
   bool public openForWithdraw;
   //Limit time to withdraw 
 
   constructor(address exampleExternalContractAddress) {
       exampleExternalContract = ExampleExternalContract(exampleExternalContractAddress);
-      owner = msg.sender;
-      // threshold=1.0;
+      // threshold=1.0;s
   }
   
 
@@ -28,7 +27,7 @@ contract Staker {
   // ( Make sure to add a `Stake(address,uint256)` event and emit it for the frontend <List/> display )
   mapping (address => uint256) public balances; //Always add public 
   event Stake (address from, uint ammount); //This will notify when the stake changes 
-  bool Open
+  bool public OpenopenForWithdraw; 
 function stake() public payable  {
 
   // uint balance = balances[msg.sender] += msg.value; //This is wrong what is coming is a big number and I am asociating it to a uint 
@@ -42,23 +41,28 @@ function stake() public payable  {
   console.log(balances[msg.sender]);
    console.log("NUMBER");
 }
-modifier enoughTreshold {
+modifier enoughTreshold { //Verifies if you staked more than 1 eth
   if(balances[msg.sender] < threshold){
-    open
-    revert ("You need more ETH to stake ")
+    openForWithdraw = true; 
+    revert ("You need more ETH to stake ");
   }
+  _;
 }
-function execute () public enoughTreshold() {
-  if()
-  if (deadline <0 ){
-    eno
-    else {
-      openForWithdraw= true;
+
+modifier deadlineIsOver(){ //Verifies if the deadline is over 
+  if (block.timestamp < deadline){
+    revert ("The deadline is not over");
+  }
+  _;
+}
+function send (address to, uint ammount)  public returns (bool ) {
+        bool salida=payable(to).send(ammount);//This is used to assert that the address will be recieving payments
+        return salida;
     }
-  }
-  else { 
-openForWithdraw= true;
-  }
+function execute () public payable enoughTreshold() deadlineIsOver() {
+  exampleExternalContract.complete{value: address(this).balance}();
+  //Sendig the ether to the staking smart contract
+  send (exampleExternalContract,balances[msg.sender]);
 }
 // function stake (address destino, uint value) payable public {
 //         payable(destino).transfer(value);
