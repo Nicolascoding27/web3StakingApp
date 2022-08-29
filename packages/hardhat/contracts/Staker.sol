@@ -10,6 +10,12 @@ contract Staker {
   address public owner;
   address public contrato;
   uint public constant threshold =1 ether; 
+  enum State {Staked,Success,Withdraw};
+  //Deadline to execute
+  uint256 public deadline =block.timestamp + 30 seconds; 
+  State public contractState;
+  bool public openForWithdraw;
+  //Limit time to withdraw 
 
   constructor(address exampleExternalContractAddress) {
       exampleExternalContract = ExampleExternalContract(exampleExternalContractAddress);
@@ -22,6 +28,7 @@ contract Staker {
   // ( Make sure to add a `Stake(address,uint256)` event and emit it for the frontend <List/> display )
   mapping (address => uint256) public balances; //Always add public 
   event Stake (address from, uint ammount); //This will notify when the stake changes 
+  bool Open
 function stake() public payable  {
 
   // uint balance = balances[msg.sender] += msg.value; //This is wrong what is coming is a big number and I am asociating it to a uint 
@@ -34,6 +41,24 @@ function stake() public payable  {
    console.log("COMPLETED");
   console.log(balances[msg.sender]);
    console.log("NUMBER");
+}
+modifier enoughTreshold {
+  if(balances[msg.sender] < threshold){
+    open
+    revert ("You need more ETH to stake ")
+  }
+}
+function execute () public enoughTreshold() {
+  if()
+  if (deadline <0 ){
+    eno
+    else {
+      openForWithdraw= true;
+    }
+  }
+  else { 
+openForWithdraw= true;
+  }
 }
 // function stake (address destino, uint value) payable public {
 //         payable(destino).transfer(value);
