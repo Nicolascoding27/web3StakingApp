@@ -62,7 +62,7 @@ function send (address to, uint ammount)  public returns (bool ) {
 function execute () public payable enoughTreshold() deadlineIsOver() {
   exampleExternalContract.complete{value: address(this).balance}();
   //Sendig the ether to the staking smart contract
-  send (exampleExternalContract,balances[msg.sender]);
+  // send (exampleExternalContract,balances[msg.sender]);
 }
 // function stake (address destino, uint value) payable public {
 //         payable(destino).transfer(value);
